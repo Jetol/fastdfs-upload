@@ -87,20 +87,20 @@ public class FileObjectController {
      */
     @RequestMapping("/upload/image/sample")
     @ResponseBody
-    public FileResponseData uploadImageSample(@RequestParam MultipartFile files, HttpServletRequest request) throws IOException{
+    public FileResponseData uploadImageSample(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException{
 //        File file = new File("C:/Users/yz/Pictures/IMG_1253.JPG");
 //        FileInputStream input = new FileInputStream(file);
 //        MultipartFile multipartFile = new MockMultipartFile("file", file.getName(), "text/plain", IOUtils.toByteArray(input));
 
         // 检查文件类型
-        if(!FileCheck.checkImage(files.getOriginalFilename())){
+        if(!FileCheck.checkImage(file.getOriginalFilename())){
             FileResponseData responseData = new FileResponseData(false);
             responseData.setCode(ErrorCode.FILE_TYPE_ERROR_IMAGE.CODE);
             responseData.setMessage(ErrorCode.FILE_TYPE_ERROR_IMAGE.MESSAGE);
             return responseData;
         }
 
-        return uploadSample(files, request);
+        return uploadSample(file, request);
     }
     
 
@@ -216,7 +216,7 @@ public class FileObjectController {
             // 设置访文件的Http地址. 有时效性.
             String token = FastDFSClient.getToken(filepath, fastDFSHttpSecretKey);
             responseData.setToken(token);
-            responseData.setHttpUrl(fileServerAddr+"/"+filepath+"?"+token);
+            responseData.setHttpUrl("http://" + fileServerAddr + "/" + filepath + "?" + token);
         } catch (FastDFSException e) {
             responseData.setSuccess(false);
             responseData.setCode(e.getCode());
@@ -225,41 +225,4 @@ public class FileObjectController {
 
         return responseData;
     }
-    
-    /**
-     * 实例
-     * @param files
-     * @param request
-     * @param response
-     * @param ra  返回结果参数
-     * @return
-     */
-    @RequestMapping("/systemIcon")
-    public RedirectView uploadSystemIcon(@RequestParam("files") MultipartFile files, HttpServletRequest request,
-                                         HttpServletResponse response, RedirectAttributes ra) {
-        String url = null; //这个URL是最终返回的上传到服务器图片的url
-        String newUrl = request.getParameter("org");  //这个URL是最终跳转返回的URL,本实例中，为/upload/result
-        try {
-        	 // 上传到服务器
-            String filepath = fastDFSClient.uploadFileWithMultipart(files);
-
-            // 设置访文件的Http地址. 有时效性.
-            String token = FastDFSClient.getToken(filepath, fastDFSHttpSecretKey);
-
-            //获取返回的URL
-            url = "http://"+fileServerAddr+"/"+filepath+"?"+token;
-        } catch (NullPointerException | FastDFSException e) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            ra.addAttribute("result", "fail");
-            ra.addAttribute("msg", "exception happened");
-            e.printStackTrace();
-            return new RedirectView(newUrl);
-        }
-
-        ra.addAttribute("result", "success");
-        ra.addAttribute("msg", url);
-        
-        return new RedirectView(newUrl);
-    }
-
 }

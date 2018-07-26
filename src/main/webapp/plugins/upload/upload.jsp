@@ -19,22 +19,35 @@
   <button type="button" class="layui-btn layui-btn-normal" id="chooseBtn">选择文件</button>
   <button type="button" class="layui-btn" id="upload">开始上传</button>
 </div>
-<script src="${basePath}/resources/jquery/jquery-1.8.3.min.js"></script>
+<div class="layui-upload-list">
+    <img class="layui-upload-img" id="picIcon" style="width: 100px;height: 100px;">
+    <p id="fileName"></p>
+</div>
+<div ></div>
 <script src="${basePath}/resources/layui/layui.js"></script>
 <script language="javaScript">
 layui.use('upload', function(){
 	var $ = layui.jquery
-	  ,upload = layui.upload;
+	  ,upload = layui.upload
+	  ,layer = layui.layer;
 	
 	//选完文件后不自动上传
 	  upload.render({
 	    elem: '#chooseBtn'
-	    ,url: '/upload/'
+	    ,url: basePath + '/fastdfs/upload/image/sample'
 	    ,auto: false
 	    //,multiple: true
 	    ,bindAction: '#upload'
 	    ,done: function(res){
-	      console.log(res)
+	    	debugger;
+	    	if(res.success){
+	    		$("#picIcon").attr('src', res.httpUrl);
+	  	      	$("#fileName").append('<span style="color: #FF5722;">上传成功</span>');
+	  	      	layer.msg("上传成功", {icon: 1});
+	    	} else {
+	    		$("#fileName").append('<span style="color: #FF5722;">上传失败</span>');
+	    		layer.msg(res.message, {icon: 2});
+	    	}
 	    }
 	  });
 });

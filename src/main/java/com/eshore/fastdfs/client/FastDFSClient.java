@@ -281,10 +281,16 @@ public class FastDFSClient {
             nvps = new NameValuePair[nvpsList.size()];
             nvpsList.toArray(nvps);
         }
-
-        TrackerServer trackerServer = TrackerServerPool.borrowObject();
-        StorageClient1 storageClient = new StorageClient1(trackerServer, null);
+        
+        TrackerServer trackerServer = null;
         try {
+        	trackerServer = TrackerServerPool.borrowObject();
+        	StorageClient1 storageClient = new StorageClient1(trackerServer, null);
+        	
+        	if(trackerServer == null) {
+                throw new FastDFSException(ErrorCode.FILE_SERVER_CONNECTION_FAILED.CODE, ErrorCode.FILE_SERVER_CONNECTION_FAILED.MESSAGE);
+            }
+        	
             // 读取流
             byte[] fileBuff = new byte[is.available()];
             is.read(fileBuff, 0, fileBuff.length);
