@@ -8,4 +8,5 @@
 - FileResponseData 文件返回信息</br>
 - TrackerServerFactory TrackerServer工厂类</br>
 - TrackerServerPool TrackerServer对象池，获取TrackerServer对象</br>
+
 搭好FastDFS环境后，修改conf.properties的相关配置，可直接启动运行项目</br>
