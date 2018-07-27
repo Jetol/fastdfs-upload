@@ -42,7 +42,8 @@ layui.use('upload', function(){
 	    	debugger;
 	    	if(res.success){
 	    		$("#picIcon").attr('src', res.httpUrl);
-	  	      	$("#fileName").append('<span style="color: #FF5722;">上传成功</span>');
+	  	      	$("#fileName").append('<span style="color: #FF5722;">上传成功</span>&nbsp;&nbsp;'
+	  	      	+ '<a class="layui-btn layui-btn-xs demo-reload" href="${basePath}/fastdfs/download/file?filePath='+res.filePath+'">下载</a>');
 	  	      	layer.msg("上传成功", {icon: 1});
 	    	} else {
 	    		$("#fileName").append('<span style="color: #FF5722;">上传失败</span>');

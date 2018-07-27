@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.eshore.fastdfs.client.ErrorCode;
 import com.eshore.fastdfs.client.FastDFSClient;
@@ -214,9 +212,9 @@ public class FileObjectController {
             responseData.setFilePath(filepath);
             responseData.setFileType(FastDFSClient.getFilenameSuffix(file.getOriginalFilename()));
             // 设置访文件的Http地址. 有时效性.
-            String token = FastDFSClient.getToken(filepath, fastDFSHttpSecretKey);
-            responseData.setToken(token);
-            responseData.setHttpUrl("http://" + fileServerAddr + "/" + filepath + "?" + token);
+            //String token = FastDFSClient.getToken(filepath, fastDFSHttpSecretKey);
+            //responseData.setToken(token);
+            responseData.setHttpUrl("http://" + fileServerAddr + "/" + filepath);
         } catch (FastDFSException e) {
             responseData.setSuccess(false);
             responseData.setCode(e.getCode());
